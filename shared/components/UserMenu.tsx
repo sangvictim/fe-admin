@@ -3,7 +3,7 @@
 import { Avatar, Menu, Text } from '@mantine/core'
 import Link from 'next/link'
 import React from 'react'
-import { IconHome } from '../icons'
+import { IconHome } from '../../icons'
 import useAuthStore from '../store/authStore'
 import { useRouter } from 'next/navigation'
 

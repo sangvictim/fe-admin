@@ -1,6 +1,6 @@
 import { NavLinkProps } from '@mantine/core'
 import React from 'react'
-import { IconHome } from '../icons'
+import { IconHome } from '../../icons'
 import Link from 'next/link'
 
 interface NavLinkMenuProps extends NavLinkProps {
@@ -33,6 +33,12 @@ export const SidebarMenu = () => {
       label: 'Profile',
       component: Link,
       href: '/profile',
+      leftSection: <IconHome className='w-5' />
+    },
+    {
+      label: 'Customer',
+      component: Link,
+      href: '/customer',
       leftSection: <IconHome className='w-5' />
     },
     {

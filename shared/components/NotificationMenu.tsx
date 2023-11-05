@@ -2,13 +2,13 @@
 
 import { Avatar, Menu, ScrollArea, Text } from '@mantine/core'
 import React from 'react'
-import { IconNotification } from '../icons'
+import { IconNotification } from '../../icons'
 import Link from 'next/link'
 
 export const NotificationMenu = () => {
   const dataNotif = Array.from({ length: 20 }, (_, index) => index)
   return (
-    <Menu width={300} position='left-start'>
+    <Menu width={300} position='left-start' trigger='hover' closeDelay={100}>
       <Menu.Target>
         <div className="relative items-center w-6 flex cursor-pointer">
           <div className="absolute bg-red-500 rounded-full w-3 h-3 top-0 right-0 flex items-center justify-center">
