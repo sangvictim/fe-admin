@@ -1,6 +1,6 @@
 "use client";
 
-import { IconArrowDown, IconHome } from '@/icons'
+import { IconAdd, IconDelete, IconEdit, IconHome, IconSearch, IconShow } from '@/icons'
 import { Button, Menu, MultiSelect, Table, Text, TextInput, Title } from '@mantine/core'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
@@ -49,10 +49,10 @@ const CustomerView = () => {
         </div>
         <div className='flex justify-between'>
           <div className="flex gap-4">
-            <TextInput placeholder='Search' leftSection={<IconArrowDown />} />
+            <TextInput placeholder='Search' leftSection={<IconSearch className='w-5' />} />
             <MultiSelect placeholder='Filter' clearable data={['1', '2', '3', '4', '5']} />
           </div>
-          <Button leftSection={<IconArrowDown />} onClick={() => {
+          <Button leftSection={<IconAdd />} onClick={() => {
             modalForm.current?.openModal()
             setTypeForm('add')
           }}>Create</Button>
@@ -86,13 +86,13 @@ const CustomerView = () => {
                         <Menu.Item onClick={() => {
                           setData(value)
                           modalShow.current?.openModal()
-                        }} leftSection={<IconHome className='w-5' />} >Preview</Menu.Item>
-                        <Menu.Item leftSection={<IconHome className='w-5' />} onClick={() => {
+                        }} leftSection={<IconShow className='w-4' />} >Show</Menu.Item>
+                        <Menu.Item leftSection={<IconEdit className='w-4' />} onClick={() => {
                           modalForm.current?.openModal()
                           setTypeForm('edit')
                           setData(value)
                         }}>Edit</Menu.Item>
-                        <Menu.Item component={Link} href='/profile' leftSection={<IconHome className='w-5' />} >Delete</Menu.Item>
+                        <Menu.Item leftSection={<IconDelete className='w-4' />} >Delete</Menu.Item>
                       </Menu.Dropdown>
                     </Menu>
                   </Table.Td>
