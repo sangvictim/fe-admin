@@ -1,7 +1,7 @@
 "use client";
 
-import { IconAdd, IconDelete, IconEdit, IconHome, IconSearch, IconShow } from '@/icons'
-import { Button, Menu, MultiSelect, Table, Text, TextInput, Title } from '@mantine/core'
+import { IconAdd, IconColumn, IconDelete, IconDotMenu, IconEdit, IconFilter, IconHome, IconSearch, IconShow, IconSortir } from '@/icons'
+import { Button, Checkbox, Menu, MultiSelect, Popover, ScrollArea, Select, Table, Text, TextInput, Title, Tooltip, UnstyledButton } from '@mantine/core'
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
 import CustomerModalShow from './_component/CustomerModalShow';
@@ -47,23 +47,77 @@ const CustomerView = () => {
         <div className="flex items-center cursor-pointer gap-6">
           <Title order={3}>Customer List</Title>
         </div>
-        <div className='flex justify-between'>
+        <div className='flex flex-col md:flex-row gap-4 justify-between'>
           <div className="flex gap-4">
             <TextInput placeholder='Search' leftSection={<IconSearch className='w-5' />} />
-            <MultiSelect placeholder='Filter' clearable data={['1', '2', '3', '4', '5']} />
+            <Popover width={300} position="bottom" arrowSize={12} withArrow >
+              <Popover.Target>
+                <Button variant='default' px={10} >
+                  <IconFilter className='fill-gray-600 w-6' />
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <div className="flex justify-between mb-4">
+                  <Text>Filters</Text>
+                  <Text c={'red'}>Reset</Text>
+                </div>
+                <Select
+                  label="Gender"
+                  placeholder="Pick gender"
+                  data={['Male', 'Female']}
+                  comboboxProps={{ withinPortal: false }}
+                />
+                <MultiSelect
+                  label="Age"
+                  placeholder="Pick age"
+                  data={['20', '21', '35']}
+                  comboboxProps={{ withinPortal: false }}
+                  clearable
+                  hidePickedOptions
+                />
+              </Popover.Dropdown>
+            </Popover>
+
+            <Popover width={200} position="bottom" arrowSize={12} withArrow >
+              <Popover.Target>
+                <Button variant='default' px={10} >
+                  <IconColumn className='fill-gray-600 w-6' />
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <div className="flex mb-4">
+                  <Text>Columns</Text>
+                </div>
+                <div className="flex gap-2 flex-col">
+                  <Checkbox label="Id" />
+                  <Checkbox label="Name" />
+                  <Checkbox label="Age" />
+                  <Checkbox label="Gender" />
+                </div>
+              </Popover.Dropdown>
+            </Popover>
+            <Button variant='outline' color='red' leftSection={<IconDelete className='w-5' />}>Delete Selected</Button>
           </div>
           <Button leftSection={<IconAdd />} onClick={() => {
             modalForm.current?.openModal()
             setTypeForm('add')
-          }}>Create</Button>
+          }}>New Customer</Button>
         </div>
-        <div className='flex w-full h-[calc(100vh-200px)] overflow-x-auto border rounded relative'>
+        <ScrollArea className='h-[calc(100vh-200px)] border rounded'>
           <Table withRowBorders withColumnBorders striped highlightOnHover>
             <Table.Thead className='sticky top-0 bg-white z-10'>
               <Table.Tr>
+                <Table.Td>
+                  <Checkbox color='red' />
+                </Table.Td>
                 <Table.Td>Id</Table.Td>
                 <Table.Td>Name</Table.Td>
-                <Table.Td>Age</Table.Td>
+                <Table.Td>
+                  <div className="flex gap-2">
+                    <Text>Age</Text>
+                    <IconSortir className='w-4' />
+                  </div>
+                </Table.Td>
                 <Table.Td>Gender</Table.Td>
                 <Table.Td>Address</Table.Td>
                 <Table.Td w={30}>#</Table.Td>
@@ -72,6 +126,9 @@ const CustomerView = () => {
             <Table.Tbody>
               {data.map((value, index) => (
                 <Table.Tr key={index}>
+                  <Table.Td>
+                    <Checkbox color='red' />
+                  </Table.Td>
                   <Table.Td>{value.id}</Table.Td>
                   <Table.Td>{value.name}</Table.Td>
                   <Table.Td>{value.age}</Table.Td>
@@ -80,7 +137,9 @@ const CustomerView = () => {
                   <Table.Td>
                     <Menu position='left-start'>
                       <Menu.Target>
-                        <Text className='cursor-pointer'>::</Text>
+                        <Button variant='transparent' unstyled >
+                          <IconDotMenu className='w-4' />
+                        </Button>
                       </Menu.Target>
                       <Menu.Dropdown p={0}>
                         <Menu.Item onClick={() => {
@@ -100,7 +159,7 @@ const CustomerView = () => {
               ))}
             </Table.Tbody>
           </Table>
-        </div>
+        </ScrollArea>
       </div>
     </>
   )

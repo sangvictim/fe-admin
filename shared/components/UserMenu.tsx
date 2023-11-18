@@ -3,7 +3,7 @@
 import { Avatar, Menu, Text } from '@mantine/core'
 import Link from 'next/link'
 import React from 'react'
-import { IconHome } from '../../icons'
+import { IconHome, IconLogout, IconSetting, IconUser } from '../../icons'
 import useAuthStore from '../store/authStore'
 import { useRouter } from 'next/navigation'
 
@@ -36,9 +36,9 @@ export const UserMenu = () => {
             </div>
           </div>
         </Menu.Label>
-        <Menu.Item component={Link} href='/profile' leftSection={<IconHome className='w-5' />} h={50}>Profile</Menu.Item>
-        <Menu.Item component={Link} href='/profile' leftSection={<IconHome className='w-5' />} h={50}>Setting</Menu.Item>
-        <Menu.Item onClick={() => hendleLogout()} leftSection={<IconHome className='w-5' />} h={50}>Logout</Menu.Item>
+        <Menu.Item component={Link} href='/profile' leftSection={<IconUser />} h={50}>Profile</Menu.Item>
+        <Menu.Item component={Link} href='/profile' leftSection={<IconSetting />} h={50}>Setting</Menu.Item>
+        <Menu.Item onClick={() => hendleLogout()} leftSection={<IconLogout />} h={50}>Logout</Menu.Item>
       </Menu.Dropdown>
     </Menu>
   )
