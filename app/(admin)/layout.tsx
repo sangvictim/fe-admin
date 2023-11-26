@@ -5,15 +5,15 @@ import { ReactNode, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import { NotificationMenu, SidebarMenu, UserMenu } from '@/shared/components';
 import useAuthStore from '@/shared/store/authStore';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   const router = useRouter()
   const { isLogedIn } = useAuthStore()
-  const [activeMenu, setActiveMenu] = useState<number>(0);
   const [opened, { toggle }] = useDisclosure();
   const { sidebarMenu } = SidebarMenu()
+  const path = usePathname()
 
   return (
     <AppShell
@@ -37,7 +37,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
       <AppShell.Navbar p='xs'>
         {sidebarMenu.map((item, index) => (
-          <NavLink key={index} {...item} active={index === activeMenu} onClick={() => { setActiveMenu(index), toggle() }} >
+          <NavLink key={index} {...item} active={path.includes(item.module)}>
             {item.submenu && item.submenu.map((item, index) => (
               <NavLink label={item.label} key={index} />
             ))}
