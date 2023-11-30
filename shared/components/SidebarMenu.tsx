@@ -40,10 +40,10 @@ export const SidebarMenu = () => {
       leftSection: <IconHome className='w-5' />
     },
     {
-      label: 'Customer',
-      module: 'customer',
+      label: 'Comment',
+      module: 'comment',
       component: Link,
-      href: '/customer',
+      href: '/comment',
       leftSection: <IconHome className='w-5' />
     },
     {

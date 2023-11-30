@@ -1,2 +1,3 @@
 export * from './userAuth'
-export * from './customer'
+export * from './comment'
+export * from './schema'
