@@ -1,17 +1,28 @@
 "use client";
 
-import { IconAdd, IconColumn, IconDelete, IconDotMenu, IconEdit, IconExcel, IconFilter, IconHome, IconSearch, IconShow, IconSortir } from '@/icons'
-import { Button, Checkbox, Menu, MultiSelect, Pagination, Popover, ScrollArea, Select, Table, Text, TextInput, Title, Tooltip, UnstyledButton } from '@mantine/core'
+import React, { useState } from 'react'
+import { IconAdd, IconColumn, IconDelete, IconDotMenu, IconEdit, IconExcel, IconFilter, IconSearch, IconShow, IconSortir } from '@/icons'
+import { Button, Checkbox, LoadingOverlay, Menu, MultiSelect, Pagination, Popover, ScrollArea, Select, Table, Text, TextInput, Title } from '@mantine/core'
 import Link from 'next/link'
-import React, { useRef, useState } from 'react'
-import CustomerModalShow from './_component/CustomerModalShow';
-import { ModalRef } from '@/shared/components';
-import CustomerModalForm from './_component/CustomerModalForm';
-import { comment } from './_component/comments';
+import useGet from '@/shared/hooks/useGet';
+import { IResponse } from '@/shared/utils/fetcher';
 
 
 const CustomerView = () => {
-  const data = comment
+  const [page, setPage] = useState<number>(1)
+  const [limitPage, setLimitPage] = useState<number | string | null>(10)
+  const [search, setSearch] = useState<string>()
+  const { data, isLoading } = useGet<IResponse[]>({
+    url: 'comments',
+    params: {
+      '_limit': limitPage !== 'all' ? limitPage : undefined,
+      '_page': limitPage !== 'all' ? page : undefined,
+      '_sort': 'id',
+      '_order': 'desc',
+      'q': search
+    }
+
+  })
 
   return (
     <div className='flex flex-col gap-4'>
@@ -22,7 +33,15 @@ const CustomerView = () => {
       <div className='flex flex-col bg-white py-4 gap-4 rounded-lg'>
         <div className="flex gap-4 px-4 justify-between">
           <div className="flex gap-4">
-            <TextInput placeholder='Search customer name' leftSection={<IconSearch className='w-5' />} />
+            <TextInput
+              placeholder='Search customer name'
+              leftSection={<IconSearch className='w-5' />}
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value)
+                setPage(1)
+              }}
+            />
             <Button variant='default' px={10} onClick={() => alert('Download Excel')}>
               <div className="flex md:gap-1">
                 <IconExcel className='fill-gray-600 w-6' />
@@ -95,6 +114,7 @@ const CustomerView = () => {
         </div>
 
         <ScrollArea className='h-[calc(100vh-290px)] border rounded relative'>
+          <LoadingOverlay visible={isLoading} />
           <Table withRowBorders withColumnBorders highlightOnHover>
             <Table.Thead >
               <Table.Tr >
@@ -114,7 +134,7 @@ const CustomerView = () => {
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
-              {data.map((value, index) => (
+              {data !== undefined && data.map((value, index) => (
                 <Table.Tr key={index}>
                   <Table.Td>
                     <Checkbox color='red' />
@@ -132,9 +152,9 @@ const CustomerView = () => {
                   <Table.Td>
                     <Menu position='left-start'>
                       <Menu.Target>
-                        <Button variant='transparent' unstyled >
+                        <div className='cursor-pointer'>
                           <IconDotMenu className='w-4' />
-                        </Button>
+                        </div>
                       </Menu.Target>
                       <Menu.Dropdown p={0}>
                         <Menu.Item component={Link} href={`/customer/${value.id}`} leftSection={<IconShow className='w-4' />} >Detail</Menu.Item>
@@ -152,13 +172,20 @@ const CustomerView = () => {
           <Text>Showing 1 to 1,000 of 1,000 results</Text>
           <div className="flex items-center border rounded-lg pl-4 gap-4">
             <Text>Per page</Text>
-            <Select defaultValue='10' data={['10', '25', '50', 'all']} styles={{
-              input: {
-                border: 'none',
-              }
-            }} w={70} withCheckIcon={false} />
+            <Select
+              defaultValue='10'
+              data={['10', '25', '50', 'all']}
+              styles={{
+                input: {
+                  border: 'none',
+                }
+              }}
+              w={70}
+              withCheckIcon={false}
+              onChange={setLimitPage}
+            />
           </div>
-          <Pagination total={10} />
+          <Pagination total={50} value={page} onChange={setPage} />
         </div>
       </div>
     </div>
