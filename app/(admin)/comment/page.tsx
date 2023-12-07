@@ -6,6 +6,7 @@ import { Button, Checkbox, LoadingOverlay, Menu, MultiSelect, Pagination, Popove
 import Link from 'next/link'
 import useGet from '@/shared/hooks/useGet';
 import { IResponse } from '@/shared/utils/fetcher';
+import { BaseTable, HeaderList } from '@/shared/components';
 
 
 const CustomerView = () => {
@@ -26,15 +27,12 @@ const CustomerView = () => {
 
   return (
     <div className='flex flex-col gap-4'>
-      <div className="flex justify-between">
-        <Title order={3}>Customer</Title>
-        <Button leftSection={<IconAdd />} component={Link} href={'/customer/create'}>Customer</Button>
-      </div>
+      <HeaderList title='Comment' urlCreate='comment/create' />
       <div className='flex flex-col bg-white py-4 gap-4 rounded-lg'>
         <div className="flex gap-4 px-4 justify-between">
           <div className="flex gap-4">
             <TextInput
-              placeholder='Search customer name'
+              placeholder='Search comment'
               leftSection={<IconSearch className='w-5' />}
               value={search}
               onChange={(event) => {
@@ -115,58 +113,29 @@ const CustomerView = () => {
 
         <ScrollArea className='h-[calc(100vh-290px)] border rounded relative'>
           <LoadingOverlay visible={isLoading} />
-          <Table withRowBorders withColumnBorders highlightOnHover>
-            <Table.Thead >
-              <Table.Tr >
-                <Table.Td w={30} className='sticky top-0 bg-gray-300 z-10'>
-                  <Checkbox color='red' />
-                </Table.Td>
-                <Table.Td className='sticky top-0 bg-gray-300 z-10' w={70}>Post Id</Table.Td>
-                <Table.Td className='sticky top-0 bg-gray-300 z-10'>Name</Table.Td>
-                <Table.Td className='sticky top-0 bg-gray-300 z-10'>
-                  <div className="flex gap-2 items-center">
-                    <Text className='text-sm'>E-mail gan</Text>
-                    <IconSortir className='w-3' />
-                  </div>
-                </Table.Td>
-                <Table.Td className='sticky top-0 bg-gray-300 z-10'>comment</Table.Td>
-                <Table.Td className='sticky top-0 bg-gray-300 z-10' w={30}>#</Table.Td>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {data !== undefined && data.map((value, index) => (
-                <Table.Tr key={index}>
-                  <Table.Td>
-                    <Checkbox color='red' />
-                  </Table.Td>
-                  <Table.Td>{value.postId}</Table.Td>
-                  <Table.Td>
-                    <Text lineClamp={1}>{value.name}</Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text lineClamp={1} component={Link} href={`mailto:${value.email}`} c="blue" className='cursor-pointer'>{value.email}</Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text lineClamp={1}>{value.body}</Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Menu position='left-start'>
-                      <Menu.Target>
-                        <div className='cursor-pointer'>
-                          <IconDotMenu className='w-4' />
-                        </div>
-                      </Menu.Target>
-                      <Menu.Dropdown p={0}>
-                        <Menu.Item component={Link} href={`/customer/${value.id}`} leftSection={<IconShow className='w-4' />} >Detail</Menu.Item>
-                        <Menu.Item component={Link} href={`/customer/${value.id}/edit`} leftSection={<IconEdit className='w-4' />} >Edit</Menu.Item>
-                        <Menu.Item leftSection={<IconDelete className='w-4' />} >Delete</Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
+          <BaseTable
+            baseURL='comment'
+            data={data || []}
+            columns={[
+              {
+                key: 'postId',
+                label: 'Post Id',
+                sortable: true,
+                width: 100
+              },
+              {
+                key: 'name',
+                label: 'Name',
+              },
+              {
+                key: 'email',
+                label: 'E-mail',
+              },
+              {
+                key: 'body',
+                label: 'Comment',
+              },
+            ]} />
         </ScrollArea>
         <div className="flex justify-between items-center px-4 flex-col md:flex-row gap-4">
           <Text>Showing 1 to 1,000 of 1,000 results</Text>
