@@ -1,17 +1,10 @@
 "use client"
-import useAuthStore from '@/shared/store/authStore';
-import { Button, LoadingOverlay, Modal } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks';
-import Link from 'next/link'
-import { useRouter } from 'next/navigation';
-import React, { useEffect } from 'react'
+
+import { useRouter } from "next/navigation"
 
 const HomePage = () => {
-  return (
-    <div>
-      <span>ini halaman home</span>
-    </div>
-  )
+  const router = useRouter()
+  return router.replace('/home')
 }
 
 export default HomePage

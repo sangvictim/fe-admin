@@ -7,12 +7,14 @@ import Link from 'next/link'
 import useGet from '@/shared/hooks/useGet';
 import { IResponse } from '@/shared/utils/fetcher';
 import { BaseTable, HeaderList } from '@/shared/components';
+import { useDebouncedState } from '@mantine/hooks';
 
 
 const CustomerView = () => {
   const [page, setPage] = useState<number>(1)
   const [limitPage, setLimitPage] = useState<number | string | null>(10)
   const [search, setSearch] = useState<string>()
+  const [debounceSearch, setDebounceSearch] = useDebouncedState<string>('', 300)
   const { data, isLoading } = useGet<IResponse[]>({
     url: 'comments',
     params: {
@@ -20,7 +22,7 @@ const CustomerView = () => {
       '_page': limitPage !== 'all' ? page : undefined,
       '_sort': 'id',
       '_order': 'desc',
-      'q': search
+      'q': debounceSearch
     }
 
   })
@@ -34,9 +36,9 @@ const CustomerView = () => {
             <TextInput
               placeholder='Search comment'
               leftSection={<IconSearch className='w-5' />}
-              value={search}
+              defaultValue={debounceSearch}
               onChange={(event) => {
-                setSearch(event.target.value)
+                setDebounceSearch(event.target.value)
                 setPage(1)
               }}
             />

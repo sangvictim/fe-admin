@@ -1,16 +1,12 @@
 "use client";
 
-import { AppShell, Burger, MantineProvider, NavLink } from '@mantine/core'
-import { ReactNode, useState } from 'react';
-import { useDisclosure } from '@mantine/hooks';
 import { NotificationMenu, SidebarMenu, UserMenu } from '@/shared/components';
-import useAuthStore from '@/shared/store/authStore';
-import { usePathname, useRouter } from 'next/navigation';
+import { AppShell, Burger, NavLink } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { usePathname } from 'next/navigation';
 
 
 export default function RootLayout(props: { children: React.ReactNode }) {
-  const router = useRouter()
-  const { isLogedIn } = useAuthStore()
   const [opened, { toggle }] = useDisclosure();
   const { sidebarMenu } = SidebarMenu()
   const path = usePathname()
