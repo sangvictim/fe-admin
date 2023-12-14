@@ -1,7 +1,7 @@
-import { IconDelete, IconDotMenu, IconEdit, IconShow, IconSortir } from '@/icons'
-import { Checkbox, Menu, Table, Text } from '@mantine/core'
-import Link from 'next/link'
-import React from 'react'
+import { IconDelete, IconDotMenu, IconEdit, IconShow, IconSortir } from '@/icons';
+import { Checkbox, Menu, Table, Text } from '@mantine/core';
+import Link from 'next/link';
+import React from 'react';
 
 interface DataProps<T> {
   label: string | React.ReactNode;
@@ -17,16 +17,17 @@ interface BaseTableProps<T> {
 }
 
 export const BaseTable = <T extends Record<string, any>>({ data, columns, baseURL }: BaseTableProps<T>) => {
+
   return (
-    <Table withRowBorders withColumnBorders highlightOnHover>
+    <Table withRowBorders withColumnBorders highlightOnHover stickyHeader>
       <Table.Thead >
-        <Table.Tr >
-          <Table.Th w={25} className='sticky top-0 bg-gray-300 z-10'>
+        <Table.Tr>
+          <Table.Th w={25} key={Math.random()}>
             <Checkbox color='red' size='xs' />
           </Table.Th>
           {columns.map((value, index) => (
             <>
-              <Table.Th className='sticky top-0 bg-gray-300 z-10' key={index} w={value.width}>
+              <Table.Th key={index} w={value.width}>
                 <div className="flex gap-2 items-center">
                   <Text size='sm'>{value.label}</Text>
                   {value.sortable && <IconSortir className='w-3' />}
@@ -34,7 +35,7 @@ export const BaseTable = <T extends Record<string, any>>({ data, columns, baseUR
               </Table.Th>
             </>
           ))}
-          <Table.Th className='sticky top-0 bg-gray-300 z-10' w={30}>#</Table.Th>
+          <Table.Th w={30}>#</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>

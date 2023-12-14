@@ -1,7 +1,7 @@
 "use client";
 
 import { NotificationMenu, SidebarMenu, UserMenu } from '@/shared/components';
-import { AppShell, Burger, NavLink } from '@mantine/core';
+import { AppShell, Burger, Button, NavLink, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { usePathname } from 'next/navigation';
 
@@ -10,7 +10,8 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   const { sidebarMenu } = SidebarMenu()
   const path = usePathname()
-
+  const { setColorScheme } = useMantineColorScheme()
+  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   return (
     <AppShell
       header={{ height: 64 }}
@@ -25,6 +26,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           </div>
           <div className="flex gap-4">
+            <Button onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}>Light/Dark</Button>
             <NotificationMenu />
             <UserMenu />
           </div>
@@ -41,7 +43,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         ))}
       </AppShell.Navbar>
 
-      <AppShell.Main className='bg-[#f3f5f6]'>{props.children}</AppShell.Main>
+      <AppShell.Main>{props.children}</AppShell.Main>
 
 
     </AppShell>

@@ -1,19 +1,18 @@
 "use client";
 
-import React, { useState } from 'react'
-import { IconAdd, IconColumn, IconDelete, IconDotMenu, IconEdit, IconExcel, IconFilter, IconSearch, IconShow, IconSortir } from '@/icons'
-import { Button, Checkbox, LoadingOverlay, Menu, MultiSelect, Pagination, Popover, ScrollArea, Select, Table, Text, TextInput, Title } from '@mantine/core'
-import Link from 'next/link'
+import { IconColumn, IconDelete, IconExcel, IconFilter, IconSearch } from '@/icons';
+import { BaseTable, HeaderList } from '@/shared/components';
 import useGet from '@/shared/hooks/useGet';
 import { IResponse } from '@/shared/utils/fetcher';
-import { BaseTable, HeaderList } from '@/shared/components';
+import { Button, Checkbox, LoadingOverlay, MultiSelect, Pagination, Popover, ScrollArea, Select, Text, TextInput, useMantineColorScheme } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
+import { useState } from 'react';
 
 
 const CustomerView = () => {
   const [page, setPage] = useState<number>(1)
   const [limitPage, setLimitPage] = useState<number | string | null>(10)
-  const [search, setSearch] = useState<string>()
+  const { colorScheme } = useMantineColorScheme()
   const [debounceSearch, setDebounceSearch] = useDebouncedState<string>('', 300)
   const { data, isLoading } = useGet<IResponse[]>({
     url: 'comments',
@@ -30,7 +29,7 @@ const CustomerView = () => {
   return (
     <div className='flex flex-col gap-4'>
       <HeaderList title='Comment' urlCreate='comment/create' />
-      <div className='flex flex-col bg-white py-4 gap-4 rounded-lg'>
+      <div className='flex flex-col  py-4 gap-4 rounded-lg'>
         <div className="flex gap-4 px-4 justify-between">
           <div className="flex gap-4">
             <TextInput
@@ -113,7 +112,7 @@ const CustomerView = () => {
           </div>
         </div>
 
-        <ScrollArea className='h-[calc(100vh-290px)] border rounded relative'>
+        <ScrollArea className={`h-[calc(100vh-290px)] rounded relative ${colorScheme === 'dark' ? 'border border-gray-500' : 'border'}`}>
           <LoadingOverlay visible={isLoading} />
           <BaseTable
             baseURL='comment'

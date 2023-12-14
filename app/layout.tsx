@@ -2,11 +2,14 @@
 
 import './globals.css';
 import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core'
+import { MantineProvider, createTheme } from '@mantine/core'
 import { SWRConfig } from 'swr';
 import Fetcher from '@/shared/utils/fetcher';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
+  const theme = createTheme({
+    /** Your theme override here */
+  });
 
   return (
     <html lang="en">
@@ -14,7 +17,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
         <SWRConfig value={{
           fetcher: Fetcher
         }}>
-          <MantineProvider>
+          <MantineProvider theme={theme} defaultColorScheme='auto'>
             {props.children}
           </MantineProvider>
         </SWRConfig>
