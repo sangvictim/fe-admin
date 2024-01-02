@@ -21,7 +21,7 @@ export const UserMenu = () => {
   }
 
   return (
-    <Menu width={200} position='left-start' trigger='hover' closeDelay={100}>
+    <Menu width={200} position='left-start' trigger='click' closeDelay={100}>
       <Menu.Target>
         <Avatar src='https://placehold.co/100x100.png' size={35} className='cursor-pointer' />
       </Menu.Target>

@@ -19,32 +19,30 @@ interface BaseTableProps<T> {
 export const BaseTable = <T extends Record<string, any>>({ data, columns, baseURL }: BaseTableProps<T>) => {
 
   return (
+
     <Table withRowBorders withColumnBorders highlightOnHover stickyHeader>
-      <Table.Thead >
-        <Table.Tr>
-          <Table.Th w={25} key={Math.random()}>
+      <Table.Thead>
+        <Table.Tr className='bg-red-500' key={'header'}>
+          <Table.Th w={25} key={'checkbox-header'}>
             <Checkbox color='red' size='xs' />
           </Table.Th>
           {columns.map((value, index) => (
-            <>
-              <Table.Th key={index} w={value.width}>
-                <div className="flex gap-2 items-center">
-                  <Text size='sm'>{value.label}</Text>
-                  {value.sortable && <IconSortir className='w-3' />}
-                </div>
-              </Table.Th>
-            </>
+            <Table.Th key={index} w={value.width}>
+              <div className="flex gap-2 items-center">
+                <Text size='sm'>{value.label}</Text>
+                {value.sortable && <IconSortir className='w-3' />}
+              </div>
+            </Table.Th>
           ))}
-          <Table.Th w={30}>#</Table.Th>
+          <Table.Th w={30} key={'actions'}>#</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
         {data.map((row, rowIndex) => (
           <Table.Tr key={rowIndex}>
-            <Table.Td>
+            <Table.Td key={'checkbox-' + rowIndex}>
               <Checkbox color='red' value={row.id} size='xs' />
             </Table.Td>
-
             {columns.map((column, colIndex) => (
               <Table.Td key={colIndex}>
                 <Text lineClamp={1} size='sm'>{
@@ -52,18 +50,20 @@ export const BaseTable = <T extends Record<string, any>>({ data, columns, baseUR
                 }</Text>
               </Table.Td>
             ))}
-            <Table.Td>
+            <Table.Td key={'menu-' + rowIndex}>
               <Menu position='left-start'>
-                <Menu.Target>
-                  <div className='cursor-pointer'>
-                    <IconDotMenu className='w-4' />
-                  </div>
-                </Menu.Target>
-                <Menu.Dropdown p={0}>
-                  <Menu.Item component={Link} href={`/${baseURL}/${row.id}`} leftSection={<IconShow className='w-4' />} >Detail</Menu.Item>
-                  <Menu.Item component={Link} href={`/${baseURL}/${row.id}/edit`} leftSection={<IconEdit className='w-4' />} >Edit</Menu.Item>
-                  <Menu.Item leftSection={<IconDelete className='w-4' />} >Delete</Menu.Item>
-                </Menu.Dropdown>
+                <Menu position='left-start'>
+                  <Menu.Target>
+                    <div className='cursor-pointer'>
+                      <IconDotMenu className='w-4' />
+                    </div>
+                  </Menu.Target>
+                  <Menu.Dropdown p={0}>
+                    <Menu.Item component={Link} href={`/${baseURL}/${row.id}`} leftSection={<IconShow className='w-4' />} >Detail</Menu.Item>
+                    <Menu.Item component={Link} href={`/${baseURL}/${row.id}/edit`} leftSection={<IconEdit className='w-4' />} >Edit</Menu.Item>
+                    <Menu.Item leftSection={<IconDelete className='w-4' />} >Delete</Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               </Menu>
             </Table.Td>
           </Table.Tr>

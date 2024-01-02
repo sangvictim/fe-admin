@@ -1,7 +1,8 @@
 "use client";
 
+import { IconMoon, IconSun } from '@/icons';
 import { NotificationMenu, SidebarMenu, UserMenu } from '@/shared/components';
-import { AppShell, Burger, Button, NavLink, useComputedColorScheme, useMantineColorScheme } from '@mantine/core';
+import { AppShell, Burger, Button, NavLink, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { usePathname } from 'next/navigation';
 
@@ -10,8 +11,15 @@ export default function RootLayout(props: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
   const { sidebarMenu } = SidebarMenu()
   const path = usePathname()
-  const { setColorScheme } = useMantineColorScheme()
-  const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
+  const { setColorScheme, colorScheme } = useMantineColorScheme()
+
+  const ButtonDarkMode = () => {
+    if (colorScheme === 'light') {
+      return <div className='flex item-center justify-center' onClick={() => setColorScheme('dark')}><IconMoon /></div>
+    } else {
+      return <div className='flex item-center justify-center' onClick={() => setColorScheme('light')}><IconSun /></div>
+    }
+  }
   return (
     <AppShell
       header={{ height: 64 }}
@@ -26,7 +34,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           </div>
           <div className="flex gap-4">
-            <Button onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}>Light/Dark</Button>
+            {ButtonDarkMode()}
             <NotificationMenu />
             <UserMenu />
           </div>
