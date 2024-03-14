@@ -1,19 +1,21 @@
 "use client";
 
 import { IconColumn, IconDelete, IconExcel, IconFilter, IconSearch } from '@/icons';
-import { BaseTable, HeaderList } from '@/shared/components';
+import { BaseTable, ButtonDefault, HeaderList } from '@/shared/components';
 import useGet from '@/shared/hooks/useGet';
+import { useCheckedStore } from '@/shared/store';
 import { IResponse } from '@/shared/utils/fetcher';
-import { Button, Checkbox, LoadingOverlay, MultiSelect, Pagination, Popover, ScrollArea, Select, Text, TextInput, useMantineColorScheme } from '@mantine/core';
+import { Checkbox, LoadingOverlay, MultiSelect, Pagination, Popover, ScrollArea, Select, Text, TextInput, useMantineColorScheme } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
-import { useState } from 'react';
+import { modals } from '@mantine/modals';
+import { useEffect, useState } from 'react';
 
 
 const CustomerView = () => {
   const [page, setPage] = useState<number>(1)
   const [limitPage, setLimitPage] = useState<number | string | null>(10)
   const { colorScheme } = useMantineColorScheme()
-  const [debounceSearch, setDebounceSearch] = useDebouncedState<string>('', 300)
+  const [debounceSearch, setDebounceSearch] = useDebouncedState<string>('', 500)
   const { data, isLoading } = useGet<IResponse[]>({
     url: 'comments',
     params: {
@@ -23,8 +25,27 @@ const CustomerView = () => {
       '_order': 'desc',
       'q': debounceSearch
     }
-
   })
+
+  const { checkedIds, clearChecked } = useCheckedStore()
+
+  const handleDelete = () => modals.openConfirmModal({
+    withCloseButton: false,
+    labels: { confirm: 'Delete', cancel: 'Cancel' },
+    centered: true,
+    children: (
+      <Text size="sm">
+        This action is so important that you are required to confirm it with a modal. Please click
+        one of these buttons to proceed.
+      </Text>
+    )
+  })
+
+  useEffect(() => {
+    // if (data) {
+    //   updateCheckList(data.map((value) => value.id))
+    // }
+  }, [data])
 
   return (
     <div className='flex flex-col gap-4'>
@@ -41,28 +62,22 @@ const CustomerView = () => {
                 setPage(1)
               }}
             />
-            <Button variant='default' px={10} onClick={() => alert('Download Excel')}>
-              <div className="flex md:gap-1">
-                <IconExcel className='fill-gray-600 w-6' />
-                <Text className='hidden md:block'>Excel</Text>
-              </div>
-            </Button>
+            <ButtonDefault
+              icon={<IconExcel className='fill-gray-600 w-5' />}
+              label='Excel'
+              variant='default'
+              onClick={() => alert('Download Excel')}
+            />
           </div>
           <div className="flex gap-4">
-            <Button variant='outline' px={10} color='red'>
-              <div className="flex md:gap-1">
-                <IconDelete className='w-5' />
-                <Text className='hidden md:block'>Delete Selected</Text>
-              </div>
-            </Button>
+
             <Popover width={300} position="bottom" arrowSize={12} withArrow >
               <Popover.Target>
-                <Button variant='default' px={10}>
-                  <div className="flex md:gap-1">
-                    <IconFilter className='fill-gray-600 w-6' />
-                    <Text className='hidden md:block'>Filter</Text>
-                  </div>
-                </Button>
+                <ButtonDefault
+                  label='Filter'
+                  icon={<IconFilter className='fill-gray-600 w-6' />}
+                  variant='default'
+                />
               </Popover.Target>
               <Popover.Dropdown>
                 <div className="flex justify-between mb-4">
@@ -88,12 +103,11 @@ const CustomerView = () => {
 
             <Popover width={200} position="bottom" arrowSize={12} withArrow >
               <Popover.Target>
-                <Button variant='default' px={10} >
-                  <div className="flex md:gap-1">
-                    <IconColumn className='fill-gray-600 w-6' />
-                    <Text className='hidden md:block'>Column</Text>
-                  </div>
-                </Button>
+                <ButtonDefault
+                  label='Column'
+                  icon={<IconColumn className='fill-gray-600 w-6' />}
+                  variant='default'
+                />
               </Popover.Target>
               <Popover.Dropdown>
                 <div className="flex mb-4">
@@ -138,7 +152,7 @@ const CustomerView = () => {
               },
             ]} />
         </ScrollArea>
-        <div className="flex justify-between items-center px-4 flex-col md:flex-row gap-4">
+        <div className="flex justify-between items-center px-4 flex-col md:flex-row gap-4 relative">
           <Text>Showing 1 to 1,000 of 1,000 results</Text>
           <div className="flex items-center border rounded-lg pl-4 gap-4">
             <Text>Per page</Text>
@@ -155,7 +169,34 @@ const CustomerView = () => {
               onChange={setLimitPage}
             />
           </div>
-          <Pagination total={50} value={page} onChange={setPage} />
+          <Pagination total={50} value={page} onChange={(value) => {
+            clearChecked()
+            setPage(value)
+          }} />
+          <div className={`absolute -bottom-4 px-4 rounded bg-blue-500 w-1/2 left-1/4 z-10 h-12 flex transition duration-300 transform ${checkedIds.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+            <div className="flex w-full justify-between items-center">
+              <span>{checkedIds.length} Items Selected</span>
+              <div className="flex">
+                <ButtonDefault
+                  label='Delete'
+                  icon={<IconDelete className='w-5' />}
+                  variant='transparent'
+                  color='white'
+                  size='xs'
+                  onClick={handleDelete}
+                />
+                <div className='border-l '>
+                  <ButtonDefault
+                    label='Cancel'
+                    variant='transparent'
+                    color='white'
+                    size='xs'
+                    onClick={() => clearChecked()}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

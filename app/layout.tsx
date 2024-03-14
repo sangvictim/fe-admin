@@ -5,6 +5,7 @@ import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core'
 import { SWRConfig } from 'swr';
 import Fetcher from '@/shared/utils/fetcher';
+import { ModalsProvider } from '@mantine/modals';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   const theme = createTheme({
@@ -18,7 +19,9 @@ export default function RootLayout(props: { children: React.ReactNode }) {
           fetcher: Fetcher
         }}>
           <MantineProvider theme={theme} defaultColorScheme='auto'>
-            {props.children}
+            <ModalsProvider>
+              {props.children}
+            </ModalsProvider>
           </MantineProvider>
         </SWRConfig>
       </body>

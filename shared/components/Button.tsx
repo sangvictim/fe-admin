@@ -1,21 +1,18 @@
-import { Button, ButtonFactory, ButtonProps, PolymorphicFactory, StylesApiProps, Text } from '@mantine/core'
-import React, { DOMAttributes } from 'react'
+import { Button, ButtonProps, Text, createPolymorphicComponent } from '@mantine/core';
+import React, { DOMAttributes, FunctionComponent, forwardRef } from 'react';
 
-interface ButtonProp extends ButtonProps, Partial<DOMAttributes<HTMLButtonElement>> {
+interface CustomButtonProps extends ButtonProps, Partial<DOMAttributes<HTMLButtonElement>> {
   label?: string;
   icon?: React.ReactNode;
 }
 
-export const ButtonDefault: React.FC<ButtonProp> = ({ label, icon, ...props }) => {
-  // Filter out event handler props and pass the rest to the Button component
-  const { onClick, ...otherProps } = props;
-
-  return (
-    <Button variant='default' px={10} className='flex-shrink-0' onClick={onClick} {...otherProps}>
-      <div className="flex md:gap-1">
+export const ButtonDefault = createPolymorphicComponent<'button', CustomButtonProps, FunctionComponent>(
+  forwardRef<HTMLButtonElement, CustomButtonProps>(({ label, icon, ...others }, ref) => (
+    <Button {...others} ref={ref} className='flex flex-shrink-0' px={10}>
+      <div className="flex md:gap-1 items-center">
         {icon}
-        <Text className='hidden md:block'>{label}</Text>
+        <Text className='hidden md:block font-normal'>{label}</Text>
       </div>
     </Button>
-  );
-};
+  ))
+);

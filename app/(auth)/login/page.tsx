@@ -5,9 +5,9 @@ import React from 'react'
 import { useForm, zodResolver } from '@mantine/form'
 import { z } from 'zod'
 import { AuthBaseProps, LoginType, UserAuth } from '@/shared/types'
-import useAuthStore from '@/shared/store/authStore'
 import { useStore } from 'zustand'
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/shared/store';
 
 const LoginPage = () => {
   const router = useRouter()

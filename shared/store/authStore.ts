@@ -13,7 +13,7 @@ const initialState: UserAuth = {
   }
 }
 
-const useAuthStore = create<AuthBaseProps>()((set, get) => ({
+export const useAuthStore = create<AuthBaseProps>()((set, get) => ({
   ...initialState,
   setAuth: async (userAuth: UserAuth) => {
     set({ ...initialState, ...userAuth }, true);
@@ -33,5 +33,3 @@ const useAuthStore = create<AuthBaseProps>()((set, get) => ({
   },
 })
 )
-
-export default useAuthStore

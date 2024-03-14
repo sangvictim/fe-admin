@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation"
 
-const HomePage = () => {
+const page = () => {
   const router = useRouter()
   return router.replace('/home')
 }
 
-export default HomePage
+export default page

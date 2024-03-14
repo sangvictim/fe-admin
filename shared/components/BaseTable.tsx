@@ -1,7 +1,10 @@
+"use client";
+
 import { IconDelete, IconDotMenu, IconEdit, IconShow, IconSortir } from '@/icons';
-import { Checkbox, Menu, Table, Text } from '@mantine/core';
+import { Checkbox, Menu, Table, Text, useMantineColorScheme } from '@mantine/core';
 import Link from 'next/link';
 import React from 'react';
+import { useCheckedStore } from '../store';
 
 interface DataProps<T> {
   label: string | React.ReactNode;
@@ -17,31 +20,44 @@ interface BaseTableProps<T> {
 }
 
 export const BaseTable = <T extends Record<string, any>>({ data, columns, baseURL }: BaseTableProps<T>) => {
-
+  const { checkedIds, toggleCheck, toggleCheckAll, isAllChecked, isPartialChecked } = useCheckedStore()
+  const { colorScheme } = useMantineColorScheme()
+  const ids = data.map((value) => value.id)
   return (
-
-    <Table withRowBorders withColumnBorders highlightOnHover stickyHeader>
+    <Table withRowBorders withColumnBorders highlightOnHover>
       <Table.Thead>
-        <Table.Tr className='bg-red-500' key={'header'}>
-          <Table.Th w={25} key={'checkbox-header'}>
-            <Checkbox color='red' size='xs' />
+        <Table.Tr key={'header'}>
+          <Table.Th w={25} key={'checkbox-header'} className={`sticky top-0 z-10 ${colorScheme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}`}>
+            <Checkbox color='red' size='xs'
+              onChange={() => toggleCheckAll(ids)}
+              checked={isAllChecked(ids)}
+              indeterminate={isPartialChecked(ids)}
+            />
           </Table.Th>
           {columns.map((value, index) => (
-            <Table.Th key={index} w={value.width}>
+            <Table.Th key={index} w={value.width} className={`sticky top-0 z-10 ${colorScheme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}`}>
               <div className="flex gap-2 items-center">
                 <Text size='sm'>{value.label}</Text>
                 {value.sortable && <IconSortir className='w-3' />}
               </div>
             </Table.Th>
           ))}
-          <Table.Th w={30} key={'actions'}>#</Table.Th>
+          <Table.Th w={30} key={'actions'} className={`sticky top-0 z-10 ${colorScheme === 'dark' ? 'bg-gray-800' : 'bg-gray-200'}`}>#</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
         {data.map((row, rowIndex) => (
           <Table.Tr key={rowIndex}>
             <Table.Td key={'checkbox-' + rowIndex}>
-              <Checkbox color='red' value={row.id} size='xs' />
+              <Checkbox
+                color='red'
+                size='xs'
+                value={row.id}
+                checked={checkedIds.some((value) => value === row.id)}
+                onChange={(item: any) => {
+                  toggleCheck(row.id)
+                }}
+              />
             </Table.Td>
             {columns.map((column, colIndex) => (
               <Table.Td key={colIndex}>
@@ -69,6 +85,6 @@ export const BaseTable = <T extends Record<string, any>>({ data, columns, baseUR
           </Table.Tr>
         ))}
       </Table.Tbody>
-    </Table>
+    </Table >
   )
 }
