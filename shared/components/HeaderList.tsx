@@ -15,7 +15,7 @@ export const HeaderList = ({ title, urlCreate }: HeaderListProps) => {
   console.log('permission:', ability.can('read', 'comment'));
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <Title order={3}>{title}</Title>
       <Can I='read' a='comment' ability={ability}>
         <Button leftSection={<IconAdd />} component={Link} href={urlCreate}>{title}</Button>
